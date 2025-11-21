@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Выбор ценностей</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            max-width: 640px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 по горизонтали */
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .value-btn {
+            padding: 12px 10px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            background: #fafafa;
+            cursor: pointer;
+            font-size: 15px;
+            text-align: center;
+            transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+            user-select: none;
+        }
+
+        .value-btn.selected {
+            background: #ffe082;
+            border-color: #ffb300;
+            transform: translateY(1px);
+        }
+
+        .value-btn:active {
+            transform: translateY(1px);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .counter {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .counter span {
+            font-weight: 600;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            border-radius: 999px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #1976d2;
+            color: #fff;
+            transition: background 0.15s ease, opacity 0.15s ease;
+        }
+
+        button[type="submit"]:disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #777;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Выберите 3 главные ценности</h1>
+    <div class="subtitle">Нажмите на три пункта, которые для вас важнее всего.</div>
+
+    <!--
+        Отправляем на PHP-обработчик, который сохранит запись в таблице votes
+        (item_1, item_2, item_3 — это id из value_items)
+    -->
+    <form id="voteForm" action="api/submit_vote.php" method="post">
+        <div class="grid" id="valuesGrid">
+            <!-- data-id = id из таблицы value_items -->
+            <div class="value-btn" data-id="1">Саморазвитие</div>
+            <div class="value-btn" data-id="2">Самореализация</div>
+            <div class="value-btn" data-id="3">Творчество</div>
+            <div class="value-btn" data-id="4">Счастье</div>
+            <div class="value-btn" data-id="5">Уважение</div>
+            <div class="value-btn" data-id="6">Командность</div>
+            <div class="value-btn" data-id="7">Ответственность</div>
+            <div class="value-btn" data-id="8">Современность</div>
+            <div class="value-btn" data-id="9">Эстетика и красота</div>
+            <div class="value-btn" data-id="10">Забота о ребёнке</div>
+        </div>
+
+        <!-- Сюда будут записаны выбранные id -->
+        <input type="hidden" name="item_1" id="item_1">
+        <input type="hidden" name="item_2" id="item_2">
+        <input type="hidden" name="item_3" id="item_3">
+
+        <div class="actions">
+            <div class="counter">
+                Выбрано: <span id="selectedCount">0</span> / 3
+            </div>
+            <button type="submit" id="submitBtn" disabled>Отправить</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    (function () {
+        const MAX_SELECTION = 3;
+        const selectedIds = [];
+        const grid = document.getElementById('valuesGrid');
+        const countSpan = document.getElementById('selectedCount');
+        const submitBtn = document.getElementById('submitBtn');
+        const form = document.getElementById('voteForm');
+
+        const input1 = document.getElementById('item_1');
+        const input2 = document.getElementById('item_2');
+        const input3 = document.getElementById('item_3');
+
+        grid.addEventListener('click', function (e) {
+            const btn = e.target.closest('.value-btn');
+            if (!btn) return;
+
+            const id = parseInt(btn.getAttribute('data-id'), 10);
+            const index = selectedIds.indexOf(id);
+
+            if (index !== -1) {
+                // Снимаем выбор
+                selectedIds.splice(index, 1);
+                btn.classList.remove('selected');
+            } else {
+                if (selectedIds.length >= MAX_SELECTION) {
+                    // Уже выбрано 3 — просто игнорируем
+                    return;
+                }
+                selectedIds.push(id);
+                btn.classList.add('selected');
+            }
+
+            // Обновляем счётчик и кнопку
+            countSpan.textContent = selectedIds.length.toString();
+            submitBtn.disabled = selectedIds.length !== MAX_SELECTION;
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (selectedIds.length !== MAX_SELECTION) {
+                e.preventDefault();
+                return;
+            }
+
+            // Записываем выбранные id в hidden-поля
+            input1.value = selectedIds[0] ?? '';
+            input2.value = selectedIds[1] ?? '';
+            input3.value = selectedIds[2] ?? '';
+        });
+    })();
+</script>
+</body>
+</html>

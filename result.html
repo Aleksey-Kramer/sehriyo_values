@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты голосования по ценностям</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Chart.js с CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .wrapper {
+            max-width: 960px;
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px 16px 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 22px;
+        }
+
+        .subtitle {
+            margin: 0 0 12px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            min-height: 320px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .back-link {
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            background: #1976d2;
+            color: #fff;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .back-link span {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .table-card {
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+
+        th, td {
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        th {
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .td-center {
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .error {
+            color: #c62828;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 14px 12px 16px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .chart-container {
+                min-height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="card">
+        <h1>Результаты голосования</h1>
+        <p class="subtitle">Распределение голосов по ценностям.</p>
+
+        <div class="chart-container">
+            <canvas id="valuesChart"></canvas>
+        </div>
+
+        <div class="info-row">
+            <div id="totalVotesInfo">Всего голосов: …</div>
+            <a href="index.html" class="back-link">
+                <span>⟵</span> К выбору ценностей
+            </a>
+        </div>
+        <div id="errorBox" class="error" style="display:none;"></div>
+    </div>
+
+    <div class="card table-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <div style="font-weight:600;">Сводка по ценностям</div>
+            <div class="badge" id="answersCountBadge">Ответов: …</div>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Ценность</th>
+                <th class="td-center">Голоса</th>
+                <th class="td-center">Доля</th>
+            </tr>
+            </thead>
+            <tbody id="valuesTableBody">
+            <!-- Заполняется через JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const ctx = document.getElementById('valuesChart').getContext('2d');
+        const totalVotesInfo = document.getElementById('totalVotesInfo');
+        const answersCountBadge = document.getElementById('answersCountBadge');
+        const tableBody = document.getElementById('valuesTableBody');
+        const errorBox = document.getElementById('errorBox');
+
+        let chartInstance = null;
+
+        function renderTable(items, totalVotes) {
+            tableBody.innerHTML = '';
+
+            if (!items || !items.length) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 4;
+                td.textContent = 'Пока нет данных для отображения.';
+                td.style.textAlign = 'center';
+                td.style.color = '#777';
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+
+                const tdIndex = document.createElement('td');
+                tdIndex.textContent = String(index + 1);
+
+                const tdLabel = document.createElement('td');
+                tdLabel.textContent = item.label;
+
+                const tdVotes = document.createElement('td');
+                tdVotes.textContent = String(item.votes);
+                tdVotes.className = 'td-center';
+
+                const tdPercent = document.createElement('td');
+                tdPercent.className = 'td-center';
+
+                let percent = 0;
+                if (totalVotes > 0) {
+                    percent = (item.votes / totalVotes) * 100;
+                }
+                tdPercent.textContent = percent.toFixed(1) + ' %';
+
+                tr.appendChild(tdIndex);
+                tr.appendChild(tdLabel);
+                tr.appendChild(tdVotes);
+                tr.appendChild(tdPercent);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function renderChart(labels, data) {
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Количество голосов',
+                        data: data,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 40,
+                                minRotation: 0,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return ' ' + context.parsed.y + ' голос(ов)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function fetchData() {
+            fetch('api/result.php')
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function (json) {
+                    if (!json || json.success !== true) {
+                        throw new Error('Некорректный ответ API');
+                    }
+
+                    const labels = json.labels || [];
+                    const data = (json.data || []).map(function (v) {
+                        return Number(v) || 0;
+                    });
+                    const items = json.items || [];
+
+                    // Общее количество голосов по ценностям (каждое нажатие = 1 голос)
+                    const totalVotes = data.reduce(function (sum, v) {
+                        return sum + v;
+                    }, 0);
+
+                    // Кол-во ответов (каждый ответ = 3 голоса)
+                    const answersCount = totalVotes / 3;
+
+                    totalVotesInfo.textContent = 'Всего голосов (по значениям): ' + totalVotes;
+                    answersCountBadge.textContent = 'Ответов: ' + answersCount.toFixed(0);
+
+                    renderChart(labels, data);
+                    renderTable(items, totalVotes);
+                })
+                .catch(function (err) {
+                    console.error(err);
+                    errorBox.style.display = 'block';
+                    errorBox.textContent = 'Ошибка загрузки данных. Попробуйте обновить страницу.';
+                    totalVotesInfo.textContent = 'Всего голосов: —';
+                    answersCountBadge.textContent = 'Ответов: —';
+                    renderTable([], 0);
+                });
+        }
+
+        fetchData();
+    })();
+</script>
+</body>
+</html>

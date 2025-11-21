@@ -493,6 +493,28 @@ tbody tr:nth-child(even) {
     border-radius: 50%;
 }
 
+
+.accepted-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.accepted-card {
+    max-width: 1200px;
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+
 /* -----------------------
    Адаптив
 ------------------------ */

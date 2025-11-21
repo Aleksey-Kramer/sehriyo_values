@@ -1,0 +1,385 @@
+/* -----------------------
+   Базовые настройки
+------------------------ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-page: #f2f3f7;
+    --card-bg: #ffffff;
+    --card-radius: 24px;
+    --card-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    --primary: #1976d2;
+    --primary-soft: #e3f2fd;
+    --text-main: #1f2933;
+    --text-muted: #6b7280;
+    --text-soft: #9ca3af;
+    --border-soft: #e5e7eb;
+
+    /* 10 цветов для ценностей */
+    --value-1: #264996;  /* Саморазвитие */
+    --value-2: #e53935;  /* Самореализация */
+    --value-3: #ffd600;  /* Творчество */
+    --value-4: #00c48c;  /* Счастье */
+    --value-5: #9c27b0;  /* Уважение */
+    --value-6: #ff9100;  /* Командность */
+    --value-7: #03a9f4;  /* Ответственность */
+    --value-8: #2e7d32;  /* Современность */
+    --value-9: #673ab7;  /* Эстетика и красота */
+    --value-10: #795548; /* Забота о ребёнке */
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg-page);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Обёртка для страниц с несколькими блоками (result.html) */
+.wrapper {
+    max-width: 1024px;
+    width: 100%;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* -----------------------
+   Карточки / контейнеры
+------------------------ */
+
+.container,
+.card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.container {
+    padding: 28px 24px;
+    max-width: 640px;
+    width: 100%;
+}
+
+.card {
+    padding: 20px 18px 22px;
+    width: 100%;
+}
+
+/* Более компактная карта (таблица) */
+.table-card {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/* -----------------------
+   Заголовки / текст
+------------------------ */
+
+h1 {
+    font-size: 24px;
+    margin: 0 0 6px;
+    font-weight: 700;
+}
+
+.subtitle {
+    margin: 0 0 18px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+p {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.note {
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+/* -----------------------
+   Кнопки
+------------------------ */
+
+button,
+.btn,
+.back-link,
+.chart-tab {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 18px;
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+button[type="submit"],
+.btn,
+.back-link {
+    background: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.35);
+}
+
+button[type="submit"]:hover,
+.btn:hover,
+.back-link:hover {
+    background: #145399;
+    box-shadow: 0 6px 16px rgba(25, 118, 210, 0.4);
+    transform: translateY(1px);
+}
+
+button[type="submit"]:disabled {
+    opacity: 0.45;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
+/* -----------------------
+   Index: сетка ценностей
+------------------------ */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.value-btn {
+    padding: 12px 10px;
+    border-radius: 12px;
+    border: 2px solid var(--border-soft);
+    background: #f9fafb;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: center;
+    line-height: 1.3;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+    user-select: none;
+    color: var(--text-main);
+}
+
+.value-btn:hover {
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.value-btn.selected {
+    background: #fff8e1;
+    border-color: #ffb300;
+    box-shadow: 0 4px 10px rgba(255, 179, 0, 0.35);
+    transform: translateY(1px);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.counter {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.counter span {
+    font-weight: 600;
+}
+
+.hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-soft);
+    text-align: right;
+}
+
+/* -----------------------
+   Accepted page
+------------------------ */
+
+.card h1 {
+    text-align: center;
+}
+
+.card p,
+.card .note {
+    text-align: center;
+}
+
+/* -----------------------
+   Result page: верхний блок
+------------------------ */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.back-link span {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* -----------------------
+   Таблица сводки
+------------------------ */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+
+th,
+td {
+    padding: 6px 8px;
+    font-size: 13px;
+}
+
+th {
+    border-bottom: 1px solid var(--border-soft);
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.td-center {
+    text-align: center;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: #1565c0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.error {
+    color: #c62828;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+/* -----------------------
+   Переключатель Столбцы / Пирог
+   (HTML добавим позже)
+------------------------ */
+
+.chart-tabs {
+    display: inline-flex;
+    padding: 3px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    gap: 4px;
+}
+
+.chart-tab {
+    background: transparent;
+    color: var(--text-muted);
+    box-shadow: none;
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+.chart-tab.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+}
+
+/* -----------------------
+   Цветовые классы для легенд
+   (если понадобятся)
+------------------------ */
+
+.value-color-1 { background: var(--value-1); }
+.value-color-2 { background: var(--value-2); }
+.value-color-3 { background: var(--value-3); }
+.value-color-4 { background: var(--value-4); }
+.value-color-5 { background: var(--value-5); }
+.value-color-6 { background: var(--value-6); }
+.value-color-7 { background: var(--value-7); }
+.value-color-8 { background: var(--value-8); }
+.value-color-9 { background: var(--value-9); }
+.value-color-10 { background: var(--value-10); }
+
+.value-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+/* -----------------------
+   Адаптив
+------------------------ */
+
+@media (max-width: 640px) {
+    body {
+        align-items: flex-start;
+    }
+
+    .container,
+    .card {
+        border-radius: 18px;
+        padding: 18px 14px 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .chart-container {
+        min-height: 260px;
+    }
+
+    .wrapper {
+        padding-top: 16px;
+    }
+}

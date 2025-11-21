@@ -5,150 +5,27 @@
     <title>Результаты голосования по ценностям</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="style.css">
     <!-- Chart.js с CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-        }
-
-        .wrapper {
-            max-width: 960px;
-            width: 100%;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 16px 16px 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
-
-        h1 {
-            margin: 0 0 4px;
-            font-size: 22px;
-        }
-
-        .subtitle {
-            margin: 0 0 12px;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            min-height: 320px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-            font-size: 13px;
-            color: #666;
-        }
-
-        .back-link {
-            text-decoration: none;
-            font-size: 14px;
-            padding: 8px 16px;
-            border-radius: 999px;
-            border: none;
-            background: #1976d2;
-            color: #fff;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .back-link span {
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .table-card {
-            font-size: 14px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 4px;
-        }
-
-        th, td {
-            padding: 6px 8px;
-            text-align: left;
-        }
-
-        th {
-            border-bottom: 1px solid #ddd;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        tbody tr:nth-child(even) {
-            background: #fafafa;
-        }
-
-        .td-center {
-            text-align: center;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 999px;
-            font-size: 12px;
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-
-        .error {
-            color: #c62828;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 640px) {
-            .card {
-                padding: 14px 12px 16px;
-            }
-
-            h1 {
-                font-size: 18px;
-            }
-
-            .chart-container {
-                min-height: 260px;
-            }
-        }
-    </style>
 </head>
 <body>
 <div class="wrapper">
     <div class="card">
         <h1>Результаты голосования</h1>
         <p class="subtitle">Распределение голосов по ценностям.</p>
+
+        <!-- Переключатель: Столбцы / Пирог -->
+        <div class="chart-tabs">
+            <button type="button" class="chart-tab active" data-mode="bar">
+                <img src="img/icon_Column.svg" alt="" width="16" height="16">
+                <span>Столбцы</span>
+            </button>
+            <button type="button" class="chart-tab" data-mode="pie">
+                <img src="img/icon_Pie.svg" alt="" width="16" height="16">
+                <span>Пирог</span>
+            </button>
+        </div>
 
         <div class="chart-container">
             <canvas id="valuesChart"></canvas>
@@ -240,7 +117,7 @@
             });
         }
 
-        function renderChart(labels, data) {
+        function renderBarChart(labels, data) {
             if (chartInstance) {
                 chartInstance.destroy();
             }
@@ -311,18 +188,16 @@
                     });
                     const items = json.items || [];
 
-                    // Общее количество голосов по ценностям (каждое нажатие = 1 голос)
                     const totalVotes = data.reduce(function (sum, v) {
                         return sum + v;
                     }, 0);
 
-                    // Кол-во ответов (каждый ответ = 3 голоса)
                     const answersCount = totalVotes / 3;
 
                     totalVotesInfo.textContent = 'Всего голосов (по значениям): ' + totalVotes;
                     answersCountBadge.textContent = 'Ответов: ' + answersCount.toFixed(0);
 
-                    renderChart(labels, data);
+                    renderBarChart(labels, data);
                     renderTable(items, totalVotes);
                 })
                 .catch(function (err) {

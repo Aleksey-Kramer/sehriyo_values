@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ffda00;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #e52421;
+      }
+
+      .cls-3 {
+        fill: #4aa5dd;
+      }
+
+      .cls-4 {
+        fill: #2c4a9a;
+      }
+    </style>
+  </defs>
+  <rect class="cls-4" x="32.27" y="53.39" width="25.43" height="112.62" rx="7.14" ry="7.14"/>
+  <rect class="cls-2" x="78.55" y="15.04" width="25.43" height="150.97" rx="7.14" ry="7.14"/>
+  <rect class="cls-1" x="124.83" y="74.52" width="25.43" height="91.49" rx="7.14" ry="7.14"/>
+  <path class="cls-3" d="M163.74,172.65h0c0,1.58-1.28,2.86-2.86,2.86H31.95c-8.26,0-14.95-6.7-14.95-14.95V43.84c0-1.58,1.28-2.86,2.86-2.86h0c1.58,0,2.86,1.28,2.86,2.86v115.81c0,5.6,4.54,10.15,10.15,10.15h128.02c1.58,0,2.86,1.28,2.86,2.86Z"/>
+</svg>

@@ -13,16 +13,18 @@
     <div class="card results-card">
         <!-- Верхний "слайдер" -->
         <div class="results-header">
-            <div class="results-header-tile results-header-tile--left" data-mode="pie">
+            <!-- Пирог — активен по умолчанию -->
+            <div class="results-header-tile results-header-tile--left results-header-tile--active" data-mode="pie">
                 <img src="img/icon_Pie.svg" alt="Диаграмма-пирог" class="results-header-icon">
             </div>
-            <div class="results-header-tile results-header-tile--right results-header-tile--active" data-mode="bar">
+            <!-- Столбцы -->
+            <div class="results-header-tile results-header-tile--right" data-mode="bar">
                 <img src="img/icon_Column.svg" alt="Столбчатая диаграмма" class="results-header-icon">
             </div>
         </div>
 
         <!-- Режим: столбцы -->
-        <div id="mode-pie" class="results-mode">
+        <div id="mode-bar" class="results-mode">
             <div class="results-chart-area">
                 <canvas id="valuesChart"></canvas>
             </div>
@@ -117,8 +119,14 @@
 
 <script>
     (function () {
-        const barCtx = document.getElementById('valuesChart').getContext('2d');
-        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const barCanvas = document.getElementById('valuesChart');
+        const pieCanvas = document.getElementById('pieChart');
+
+        // если вдруг canvas не нашёлся — аккуратно выходим
+        if (!barCanvas || !pieCanvas) return;
+
+        const barCtx = barCanvas.getContext('2d');
+        const pieCtx = pieCanvas.getContext('2d');
         const errorBox = document.getElementById('errorBox');
 
         const modeBar = document.getElementById('mode-bar');
@@ -145,7 +153,6 @@
             rootStyles.getPropertyValue('--value-10').trim()
         ];
 
-        // Плагин для процентов внизу столбцов
         const percentagePlugin = {
             id: 'percentagePlugin',
             afterDatasetsDraw(chart) {
@@ -181,6 +188,9 @@
         Chart.register(percentagePlugin);
 
         function setMode(mode) {
+            // на всякий случай проверяем существование блоков
+            if (!modeBar || !modePie) return;
+
             headerTiles.forEach(tile =>
                 tile.classList.toggle(
                     'results-header-tile--active',
@@ -320,14 +330,14 @@
         }
 
         function fetchData() {
-            fetch('https://sehriyospace.uz/values2/api/result.php')
-                .then(function (response) {
+            fetch('api/result.php')
+                .then(response => {
                     if (!response.ok) {
                         throw new Error('HTTP ' + response.status);
                     }
                     return response.json();
                 })
-                .then(function (json) {
+                .then(json => {
                     if (!json || json.success !== true) {
                         throw new Error('Некорректный ответ API');
                     }
@@ -352,12 +362,13 @@
                     renderPieChart(data);
                     updatePieLegend(percents);
                 })
-                .catch(function (err) {
+                .catch(err => {
                     console.error(err);
                     errorBox.style.display = 'block';
                 });
         }
 
+        // Пирог — стартовый режим
         setMode('pie');
         fetchData();
     })();

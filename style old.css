@@ -49,7 +49,7 @@ body {
     align-items: center;
 }
 
-/* Обёртка для result.html */
+/* Обёртка для страниц с несколькими блоками (result.html) */
 .wrapper {
     max-width: 1960px;
     min-height: 720px;
@@ -83,22 +83,10 @@ body {
     width: 100%;
 }
 
+/* Более компактная карта (таблица) */
 .table-card {
     padding-top: 16px;
     padding-bottom: 16px;
-}
-
-/* Для заголовков в картах (если понадобится) */
-.card-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-.card-title {
-    font-weight: 600;
 }
 
 /* -----------------------
@@ -151,7 +139,8 @@ p {
 
 button,
 .btn,
-.back-link {
+.back-link,
+.chart-tab {
     font-family: inherit;
     cursor: pointer;
     border: none;
@@ -189,11 +178,6 @@ button[type="submit"]:disabled {
     cursor: default;
     box-shadow: none;
     transform: none;
-}
-
-.back-link span {
-    font-size: 18px;
-    line-height: 1;
 }
 
 /* -----------------------
@@ -287,7 +271,32 @@ button[type="submit"]:disabled {
 }
 
 /* -----------------------
-   Таблица (если понадобится старая сводка)
+   Result page: верхний блок
+------------------------ */
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.back-link span {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* -----------------------
+   Таблица сводки
 ------------------------ */
 
 table {
@@ -335,18 +344,45 @@ tbody tr:nth-child(even) {
 }
 
 /* -----------------------
-   Цветовые классы для блоков
+   Переключатель Столбцы / Пирог
 ------------------------ */
 
-.value-color-1  { background: var(--value-1); }
-.value-color-2  { background: var(--value-2); }
-.value-color-3  { background: var(--value-3); }
-.value-color-4  { background: var(--value-4); }
-.value-color-5  { background: var(--value-5); }
-.value-color-6  { background: var(--value-6); }
-.value-color-7  { background: var(--value-7); }
-.value-color-8  { background: var(--value-8); }
-.value-color-9  { background: var(--value-9); }
+.chart-tabs {
+    display: inline-flex;
+    padding: 3px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    gap: 4px;
+}
+
+.chart-tab {
+    background: transparent;
+    color: var(--text-muted);
+    box-shadow: none;
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+.chart-tab.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18);
+}
+
+/* -----------------------
+   Цветовые классы для легенд
+------------------------ */
+
+.value-color-1 { background: var(--value-1); }
+.value-color-2 { background: var(--value-2); }
+.value-color-3 { background: var(--value-3); }
+.value-color-4 { background: var(--value-4); }
+.value-color-5 { background: var(--value-5); }
+.value-color-6 { background: var(--value-6); }
+.value-color-7 { background: var(--value-7); }
+.value-color-8 { background: var(--value-8); }
+.value-color-9 { background: var(--value-9); }
 .value-color-10 { background: var(--value-10); }
 
 .value-color-dot {
@@ -356,108 +392,47 @@ tbody tr:nth-child(even) {
 }
 
 /* -----------------------
-   Result: общий каркас
------------------------- */
-
-.results-card {
-    padding: 20px 20px 24px;
-    min-height: 700px;
-}
-
-/* Верхняя серая панель (слайдер Столбцы / Пирог) */
-.results-header {
-    background: #dedede;
-    border-radius: 24px;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.results-header-tile {
-    flex: 1;
-    border-radius: 20px;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-}
-
-.results-header-tile--left  { }
-.results-header-tile--right { }
-
-.results-header-tile--active {
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.results-header-icon {
-    max-width: 100%;
-    height: 56px;
-    width: auto;
-}
-
-/* Область диаграммы (столбцы) */
-.results-chart-area {
-    width: 100%;
-    height: 700px;
-}
-
-/* Переключаемые режимы */
-.results-mode {
-    display: none;
-}
-
-.results-mode--active {
-    display: block;
-}
-
-/* -----------------------
    Pie layout (пирог вокруг логотипа)
 ------------------------ */
 
 .pie-container {
     background: #33344f;
     border-radius: 32px;
-    padding: 24px 72px;
+    padding: 32px 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 32px;
     color: #ffffff;
-    min-height: 700px;
+    min-height: 700px; 
 }
 
-/* Левая/правая колонка легенды */
 .pie-legend-column {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 18px;
 }
 
 .pie-legend-row {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .pie-legend-color {
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #ffffff;
 }
 
 .pie-legend-label {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
 }
 
@@ -465,17 +440,16 @@ tbody tr:nth-child(even) {
     flex-direction: row-reverse;
 }
 
-/* Центр с логотипом и кольцом */
 .pie-center {
-    flex: 0 0 440px;
+    flex: 0 0 360px;
     display: flex;
     justify-content: center;
 }
 
 .pie-chart-wrapper {
     position: relative;
-    width: 400px;
-    height: 400px;
+    width: 340px;
+    height: 340px;
 }
 
 .pie-chart-wrapper canvas {
@@ -492,6 +466,8 @@ tbody tr:nth-child(even) {
     height: auto;
     border-radius: 50%;
 }
+
+
 
 /* -----------------------
    Адаптив
@@ -524,7 +500,6 @@ tbody tr:nth-child(even) {
         padding: 10px 10px;
         border-radius: 16px;
         gap: 8px;
-        margin-bottom: 18px;
     }
 
     .results-header-tile {
@@ -556,38 +531,33 @@ tbody tr:nth-child(even) {
     .counter {
         text-align: center;
     }
-
     .pie-container {
         flex-direction: column;
         align-items: center;
         padding: 20px 16px;
-        min-height: auto;
-        gap: 20px;
+        min-height: auto; 
     }
 
     .pie-legend-column {
         width: 100%;
         max-width: 320px;
-        gap: 18px;
-    }
-
-    .pie-legend-color {
-        width: 52px;
-        height: 52px;
-        font-size: 16px;
-    }
-
-    .pie-legend-label {
-        font-size: 16px;
     }
 
     .pie-chart-wrapper {
-        width: 260px;
-        height: 260px;
+        width: 240px;
+        height: 240px;
+    }
+
+    .pie-legend-row {
+        justify-content: flex-start;
+    }
+
+    .pie-legend-label {
+        font-size: 14px;
     }
 }
 
-/* Планшеты / узкие десктопы */
+
 @media (max-width: 1024px) {
     .wrapper {
         max-width: 100%;
@@ -618,22 +588,92 @@ tbody tr:nth-child(even) {
         height: 380px;
     }
 
+    
     .pie-container {
         padding: 24px 24px;
         gap: 24px;
-        min-height: auto;
-    }
-
-    .pie-center {
-        flex: 0 0 360px;
+        min-height: auto;   
     }
 
     .pie-chart-wrapper {
-        width: 320px;
-        height: 320px;
+        width: 280px;
+        height: 280px;
     }
 
     .pie-legend-label {
-        font-size: 18px;
+        font-size: 16px;
     }
+}
+
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    font-weight: 600;
+}
+
+/* -----------------------
+   Result: макет как на референсе
+------------------------ */
+
+.results-card {
+    padding: 20px 20px 24px;
+    min-height: 700px;
+}
+
+/* Верхняя серая панель */
+.results-header {
+    background: #dedede;
+    border-radius: 24px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.results-header-tile {
+    flex: 1;
+    border-radius: 20px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;          /* по умолчанию серая подложка за счёт header */
+}
+
+/* Модификаторы по сторонам больше не трогают фон */
+.results-header-tile--left  { }
+.results-header-tile--right { }
+
+/* Активная плитка — белая плюс тень */
+.results-header-tile--active {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.results-header-icon {
+    max-width: 100%;
+    height: 56px;
+    width: auto;
+}
+
+/* Область диаграммы */
+.results-chart-area {
+    width: 100%;
+    height: 700px;
+}
+
+.results-mode {
+    display: none;
+}
+
+.results-mode--active {
+    display: block;
 }

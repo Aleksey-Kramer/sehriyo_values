@@ -6,130 +6,219 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="style.css">
-    <!-- Chart.js с CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="wrapper">
-    <div class="card">
-        <h1>Результаты голосования</h1>
-        <p class="subtitle">Распределение голосов по ценностям.</p>
-
-        <!-- Переключатель: Столбцы / Пирог -->
-        <div class="chart-tabs">
-            <button type="button" class="chart-tab active" data-mode="bar">
-                <img src="img/icon_Column.svg" alt="" width="16" height="16">
-                <span>Столбцы</span>
-            </button>
-            <button type="button" class="chart-tab" data-mode="pie">
-                <img src="img/icon_Pie.svg" alt="" width="16" height="16">
-                <span>Пирог</span>
-            </button>
+    <div class="card results-card">
+        <!-- Верхний "слайдер" -->
+        <div class="results-header">
+            <div class="results-header-tile results-header-tile--left" data-mode="pie">
+                <img src="img/icon_Pie.svg" alt="Диаграмма-пирог" class="results-header-icon">
+            </div>
+            <div class="results-header-tile results-header-tile--right results-header-tile--active" data-mode="bar">
+                <img src="img/icon_Column.svg" alt="Столбчатая диаграмма" class="results-header-icon">
+            </div>
         </div>
 
-        <div class="chart-container">
-            <canvas id="valuesChart"></canvas>
+        <!-- Режим: столбцы -->
+        <div id="mode-bar" class="results-mode results-mode--active">
+            <div class="results-chart-area">
+                <canvas id="valuesChart"></canvas>
+            </div>
         </div>
 
-        <div class="info-row">
-            <div id="totalVotesInfo">Всего голосов: …</div>
-            <a href="index.html" class="back-link">
-                <span>⟵</span> К выбору ценностей
-            </a>
-        </div>
-        <div id="errorBox" class="error" style="display:none;"></div>
-    </div>
+        <!-- Режим: пирог -->
+        <div id="mode-pie" class="results-mode">
+            <div class="pie-container">
+                <!-- Левая колонка легенды -->
+                <div class="pie-legend-column pie-legend-column--left">
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-5">
+                            <span data-value-id="5">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Уважение</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-4">
+                            <span data-value-id="4">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Счастье</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-3">
+                            <span data-value-id="3">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Творчество</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-2">
+                            <span data-value-id="2">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Самореализация</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-1">
+                            <span data-value-id="1">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Саморазвитие</div>
+                    </div>
+                </div>
 
-    <div class="card table-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-            <div style="font-weight:600;">Сводка по ценностям</div>
-            <div class="badge" id="answersCountBadge">Ответов: …</div>
+                <!-- Центр с логотипом и кольцом -->
+                <div class="pie-center">
+                    <div class="pie-chart-wrapper">
+                        <canvas id="pieChart"></canvas>
+                        <img src="img/logo.png" alt="Sehriyo" class="pie-logo">
+                    </div>
+                </div>
+
+                <!-- Правая колонка легенды -->
+                <div class="pie-legend-column pie-legend-column--right">
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-6">
+                            <span data-value-id="6">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Командность</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-7">
+                            <span data-value-id="7">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Ответственность</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-8">
+                            <span data-value-id="8">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Современность</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-9">
+                            <span data-value-id="9">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Эстетика и красота</div>
+                    </div>
+                    <div class="pie-legend-row">
+                        <div class="pie-legend-color value-color-10">
+                            <span data-value-id="10">0%</span>
+                        </div>
+                        <div class="pie-legend-label">Забота о ребёнке</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Ценность</th>
-                <th class="td-center">Голоса</th>
-                <th class="td-center">Доля</th>
-            </tr>
-            </thead>
-            <tbody id="valuesTableBody">
-            <!-- Заполняется через JS -->
-            </tbody>
-        </table>
+
+        <div id="errorBox" class="error" style="display:none;text-align:center;margin-top:8px;">
+            Ошибка загрузки данных.
+        </div>
     </div>
 </div>
 
 <script>
     (function () {
-        const ctx = document.getElementById('valuesChart').getContext('2d');
-        const totalVotesInfo = document.getElementById('totalVotesInfo');
-        const answersCountBadge = document.getElementById('answersCountBadge');
-        const tableBody = document.getElementById('valuesTableBody');
+        const barCtx = document.getElementById('valuesChart').getContext('2d');
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
         const errorBox = document.getElementById('errorBox');
 
-        let chartInstance = null;
+        const modeBar = document.getElementById('mode-bar');
+        const modePie = document.getElementById('mode-pie');
+        const headerTiles = document.querySelectorAll('.results-header-tile');
 
-        function renderTable(items, totalVotes) {
-            tableBody.innerHTML = '';
+        let barChart = null;
+        let pieChart = null;
+        let lastLabels = [];
+        let lastData = [];
+        let lastPercents = [];
 
-            if (!items || !items.length) {
-                const tr = document.createElement('tr');
-                const td = document.createElement('td');
-                td.colSpan = 4;
-                td.textContent = 'Пока нет данных для отображения.';
-                td.style.textAlign = 'center';
-                td.style.color = '#777';
-                tr.appendChild(td);
-                tableBody.appendChild(tr);
-                return;
+        const rootStyles = getComputedStyle(document.documentElement);
+        const ALL_COLORS = [
+            rootStyles.getPropertyValue('--value-1').trim(),
+            rootStyles.getPropertyValue('--value-2').trim(),
+            rootStyles.getPropertyValue('--value-3').trim(),
+            rootStyles.getPropertyValue('--value-4').trim(),
+            rootStyles.getPropertyValue('--value-5').trim(),
+            rootStyles.getPropertyValue('--value-6').trim(),
+            rootStyles.getPropertyValue('--value-7').trim(),
+            rootStyles.getPropertyValue('--value-8').trim(),
+            rootStyles.getPropertyValue('--value-9').trim(),
+            rootStyles.getPropertyValue('--value-10').trim()
+        ];
+
+        // Плагин для процентов внизу столбцов
+        const percentagePlugin = {
+            id: 'percentagePlugin',
+            afterDatasetsDraw(chart) {
+                const dataset = chart.data.datasets[0];
+                const meta = chart.getDatasetMeta(0);
+                const percents = dataset._percents;
+                if (!percents || !meta || !meta.data) return;
+
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = 'bold 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+
+                meta.data.forEach((bar, index) => {
+                    const p = percents[index];
+                    if (p == null) return;
+
+                    const text = p + '%';
+                    const x = bar.x;
+                    const y = bar.base - 4;
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowColor = 'rgba(0,0,0,0.35)';
+                    ctx.shadowBlur = 4;
+                    ctx.fillText(text, x, y);
+                });
+
+                ctx.restore();
             }
+        };
 
-            items.forEach((item, index) => {
-                const tr = document.createElement('tr');
+        Chart.register(percentagePlugin);
 
-                const tdIndex = document.createElement('td');
-                tdIndex.textContent = String(index + 1);
+        function setMode(mode) {
+            headerTiles.forEach(tile =>
+                tile.classList.toggle(
+                    'results-header-tile--active',
+                    tile.dataset.mode === mode
+                )
+            );
 
-                const tdLabel = document.createElement('td');
-                tdLabel.textContent = item.label;
-
-                const tdVotes = document.createElement('td');
-                tdVotes.textContent = String(item.votes);
-                tdVotes.className = 'td-center';
-
-                const tdPercent = document.createElement('td');
-                tdPercent.className = 'td-center';
-
-                let percent = 0;
-                if (totalVotes > 0) {
-                    percent = (item.votes / totalVotes) * 100;
-                }
-                tdPercent.textContent = percent.toFixed(1) + ' %';
-
-                tr.appendChild(tdIndex);
-                tr.appendChild(tdLabel);
-                tr.appendChild(tdVotes);
-                tr.appendChild(tdPercent);
-
-                tableBody.appendChild(tr);
-            });
+            if (mode === 'bar') {
+                modeBar.classList.add('results-mode--active');
+                modePie.classList.remove('results-mode--active');
+            } else {
+                modePie.classList.add('results-mode--active');
+                modeBar.classList.remove('results-mode--active');
+            }
         }
 
-        function renderBarChart(labels, data) {
-            if (chartInstance) {
-                chartInstance.destroy();
+        headerTiles.forEach(tile => {
+            tile.addEventListener('click', function () {
+                const mode = tile.dataset.mode || 'bar';
+                setMode(mode);
+            });
+        });
+
+        function renderBarChart(labels, data, percents) {
+            if (barChart) {
+                barChart.destroy();
             }
 
-            chartInstance = new Chart(ctx, {
+            barChart = new Chart(barCtx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Количество голосов',
                         data: data,
-                        borderWidth: 1
+                        backgroundColor: ALL_COLORS,
+                        borderColor: ALL_COLORS,
+                        borderWidth: 0,
+                        _percents: percents
                     }]
                 },
                 options: {
@@ -137,19 +226,33 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: {
+                            grid: {
+                                display: false
+                            },
+                            border: {
+                                display: true,
+                                color: '#d4d4d4',
+                                width: 4
+                            },
                             ticks: {
                                 autoSkip: false,
-                                maxRotation: 40,
+                                maxRotation: 0,
                                 minRotation: 0,
+                                padding: 6,
                                 font: {
-                                    size: 11
+                                    size: 14,
+                                    weight: '600'
                                 }
                             }
                         },
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                precision: 0
+                            display: false,
+                            grid: {
+                                display: false
+                            },
+                            border: {
+                                display: false
                             }
                         }
                     },
@@ -159,8 +262,10 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function (context) {
-                                    return ' ' + context.parsed.y + ' голос(ов)';
+                                label(context) {
+                                    const value = context.parsed.y;
+                                    const p = percents[context.dataIndex] ?? 0;
+                                    return ' ' + value + ' голос(ов) — ' + p + '%';
                                 }
                             }
                         }
@@ -169,8 +274,53 @@
             });
         }
 
+        function renderPieChart(data) {
+            if (pieChart) {
+                pieChart.destroy();
+            }
+
+            pieChart = new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: lastLabels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ALL_COLORS,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '62%',
+                    rotation: -90,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label(context) {
+                                    const value = context.parsed;
+                                    const p = lastPercents[context.dataIndex] ?? 0;
+                                    return ' ' + value + ' голос(ов) — ' + p + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updatePieLegend(percents) {
+            const els = document.querySelectorAll('.pie-legend-color span[data-value-id]');
+            els.forEach(span => {
+                const id = Number(span.dataset.valueId);
+                const p = percents[id - 1] ?? 0;
+                span.textContent = p + '%';
+            });
+        }
+
         function fetchData() {
-            fetch('https://sehriyospace.uz/values/api/result.php')
+            fetch('https://sehriyospace.uz/values2/api/result.php')
                 .then(function (response) {
                     if (!response.ok) {
                         throw new Error('HTTP ' + response.status);
@@ -183,33 +333,32 @@
                     }
 
                     const labels = json.labels || [];
-                    const data = (json.data || []).map(function (v) {
-                        return Number(v) || 0;
-                    });
-                    const items = json.items || [];
+                    const data = (json.data || []).map(v => Number(v) || 0);
 
-                    const totalVotes = data.reduce(function (sum, v) {
-                        return sum + v;
-                    }, 0);
+                    if (!labels.length) {
+                        throw new Error('Пустые данные');
+                    }
 
-                    const answersCount = totalVotes / 3;
+                    const total = data.reduce((sum, v) => sum + v, 0);
+                    const percents = data.map(v =>
+                        total > 0 ? Math.round((v / total) * 100) : 0
+                    );
 
-                    totalVotesInfo.textContent = 'Всего голосов (по значениям): ' + totalVotes;
-                    answersCountBadge.textContent = 'Ответов: ' + answersCount.toFixed(0);
+                    lastLabels = labels;
+                    lastData = data;
+                    lastPercents = percents;
 
-                    renderBarChart(labels, data);
-                    renderTable(items, totalVotes);
+                    renderBarChart(labels, data, percents);
+                    renderPieChart(data);
+                    updatePieLegend(percents);
                 })
                 .catch(function (err) {
                     console.error(err);
                     errorBox.style.display = 'block';
-                    errorBox.textContent = 'Ошибка загрузки данных. Попробуйте обновить страницу.';
-                    totalVotesInfo.textContent = 'Всего голосов: —';
-                    answersCountBadge.textContent = 'Ответов: —';
-                    renderTable([], 0);
                 });
         }
 
+        setMode('bar');
         fetchData();
     })();
 </script>

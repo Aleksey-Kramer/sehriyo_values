@@ -8,8 +8,13 @@
 </head>
 <body>
 <div class="container">
-    <h1>Выберите 3 главные ценности</h1>
-    <div class="subtitle">Нажмите на три пункта, которые для вас важнее всего.</div>
+    <!-- Логотип школы -->
+    <div class="logo-wrap">
+        <img src="img/logo.png" alt="Sehriyo" class="logo">
+    </div>
+
+    <!-- Вопрос -->
+    <h1>Какие три важных ценности лучше всего реализованы в школе Sehriyo?</h1>
 
     <!--
         Отправляем на PHP-обработчик, который сохранит запись в таблице votes
@@ -18,16 +23,21 @@
     <form id="voteForm" action="api/submit_vote.php" method="post">
         <div class="grid" id="valuesGrid">
             <!-- data-id = id из таблицы value_items -->
-            <div class="value-btn" data-id="1">Саморазвитие</div>
-            <div class="value-btn" data-id="2">Самореализация</div>
-            <div class="value-btn" data-id="3">Творчество</div>
-            <div class="value-btn" data-id="4">Счастье</div>
+            <!-- Порядок соответствует референсу (2×5), но id остаются как в БД -->
             <div class="value-btn" data-id="5">Уважение</div>
-            <div class="value-btn" data-id="6">Командность</div>
-            <div class="value-btn" data-id="7">Ответственность</div>
-            <div class="value-btn" data-id="8">Современность</div>
-            <div class="value-btn" data-id="9">Эстетика и красота</div>
+            <div class="value-btn" data-id="4">Счастье</div>
+
             <div class="value-btn" data-id="10">Забота о ребёнке</div>
+            <div class="value-btn" data-id="9">Эстетика и красота</div>
+
+            <div class="value-btn" data-id="7">Ответственность</div>
+            <div class="value-btn" data-id="6">Командность</div>
+
+            <div class="value-btn" data-id="1">Саморазвитие</div>
+            <div class="value-btn" data-id="8">Современность</div>
+
+            <div class="value-btn" data-id="3">Творчество</div>
+            <div class="value-btn" data-id="2">Самореализация</div>
         </div>
 
         <!-- Сюда будут записаны выбранные id -->
@@ -37,7 +47,7 @@
 
         <div class="actions">
             <div class="counter">
-                Выбрано: <span id="selectedCount">0</span> / 3
+                Выбрано <span id="selectedCount">0</span>/3
             </div>
             <button type="submit" id="submitBtn" disabled>Отправить</button>
         </div>
